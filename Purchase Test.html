@@ -1,0 +1,27 @@
+<!doctype html><html><head><meta charset="utf-8">
+<title>Purchase Test</title>
+<script>
+  // 从 URL 取参数
+  const q = new URLSearchParams(location.search);
+  const pid = q.get('pid');                 // 像素ID
+  const value = parseFloat(q.get('value')||'99');
+  const currency = (q.get('currency')||'BRL').toUpperCase();
+  const redirect = q.get('redirect');       // 跳转地址（可选）
+
+  // 加载 Pixel
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+
+  fbq('init', pid);
+  fbq('track', 'Purchase', {value: value, currency: currency});
+  // 给像素一点时间上报，再跳转
+  setTimeout(()=>{ if(redirect) location.href = redirect; }, 800);
+</script>
+<noscript>
+  <!-- 兜底像素 -->
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr/?id=PID_REPLACE&ev=Purchase&cd[value]=99.00&cd[currency]=BRL&noscript=1"/>
+</noscript>
+</head><body>Firing Purchase…</body></html>
