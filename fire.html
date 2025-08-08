@@ -1,0 +1,28 @@
+<!doctype html><html><head><meta charset="utf-8"><title>FB Event Fire</title>
+<script>
+  const qs = new URLSearchParams(location.search);
+  const pids = (qs.get('pid') || '').split(',').map(s => s.trim()).filter(Boolean);
+  const ev   = (qs.get('e') || 'Purchase');
+  const val  = parseFloat(qs.get('v') || '99');
+  const cur  = (qs.get('cur') || 'BRL').toUpperCase();
+  const go   = qs.get('redirect');
+
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+
+  if (!pids.length) { alert('缺少 pid 参数，如 ?pid=123,456'); }
+  else {
+    pids.forEach(id => {
+      fbq('init', id);
+      fbq('track', ev, { value: val, currency: cur });
+    });
+  }
+  setTimeout(()=>{ if (go) location.href = go; }, 800);
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+       src="https://www.facebook.com/tr/?id=PID_REPLACE&ev=Purchase&cd[value]=99.00&cd[currency]=BRL&noscript=1"/>
+</noscript>
+</head><body>Firing…</body></html>
